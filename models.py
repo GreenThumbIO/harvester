@@ -12,18 +12,37 @@ class Schedule(db.Model):
       primary_key=True
     )
     name = db.Column(
-      db.String(80)
+      db.String(80),
+      nullable=False
+    )
+    frequency = db.Column(
+      db.String(30),
+      nullable=False
     )
 
-    # @classmethod
-    # def create(cls, name):
-    #     """Creates a schedule."""
+    # manufacturer_id
 
+    # add backref='schedule' and lazy='dynamic'?
+    feedings = db.relationship('Feeding', backref='schedule')
 
-    #     schedule = Schedule(name=name)
+class Feeding(db.Model):
+    """Represents one feeding event on a schedule"""
 
-    #     db.session.add(schedule)
-    #     return schedule
+    __tablename__ = 'feedings'
+
+    id = db.Column(
+      db.Integer,
+      primary_key=True
+    )
+    schedule_id = db.Column(
+      db.Integer,
+      db.ForeignKey('schedules.id', ondelete='CASCADE')
+    )
+    order = db.Column(
+      db.Integer,
+      nullable=False
+    )
+
 
 def connect_db(app):
     """Connect this database to provided Flask app.
