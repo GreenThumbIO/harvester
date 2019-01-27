@@ -157,7 +157,23 @@ class Device(db.Model):
     )
     registered_by = db.Column(
       db.Integer,
-      nullable=False
+      nullable=True
+    )
+
+class ProjectDevice(db.Model):
+    """Connection of a device <-> project """
+
+    __tablename__ = 'projectdevices'
+
+    project_id = db.Column(
+      db.Integer,
+      db.ForeignKey('projects.id', ondelete='CASCADE')
+      primary_key=True,
+    )
+    device_id = db.Column(
+      db.Integer,
+      db.ForeignKey('devices.id', ondelete='CASCADE')
+      primary_key=True,
     )
 
 def connect_db(app):
