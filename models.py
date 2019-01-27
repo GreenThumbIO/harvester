@@ -43,6 +43,25 @@ class Feeding(db.Model):
       nullable=False
     )
 
+class Dosage(db.Model):
+    """Represents one dosage of a product with amount, product id, and feeding
+    id that controls the dosage amount"""
+
+    __tablename__ = 'dosages'
+
+    id = db.Column(
+      db.Integer,
+      primary_key=True
+    )
+    feeding_id = db.Column(
+      db.Integer,
+      db.ForeignKey('feedings.id', ondelete='CASCADE')
+    )
+    product_id = db.Column(
+      db.Integer,
+      db.ForeignKey('products.id', ondelete='CASCADE')
+    )
+
 
 def connect_db(app):
     """Connect this database to provided Flask app.
