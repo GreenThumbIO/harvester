@@ -36,6 +36,7 @@ class Feeding(db.Model):
     )
     schedule_id = db.Column(
       db.Integer,
+      nullable=False
       db.ForeignKey('schedules.id', ondelete='CASCADE')
     )
     order = db.Column(
@@ -55,11 +56,37 @@ class Dosage(db.Model):
     )
     feeding_id = db.Column(
       db.Integer,
+      nullable=False
       db.ForeignKey('feedings.id', ondelete='CASCADE')
     )
     product_id = db.Column(
       db.Integer,
+      nullable=False
       db.ForeignKey('products.id', ondelete='CASCADE')
+    )
+
+class Product(db.Model):
+    """Represents a single product with name, macro_nutrients and fk to
+    manufacturer"""
+
+    __tablename__ = 'products'
+
+    id = db.Column(
+      db.Integer,
+      primary_key=True
+    )
+    name = db.Column(
+      db.String(80),
+      nullable=False
+    )
+    macro_nutrients = db.Column(
+      db.String(80),
+      nullable=True
+    )
+    manufacturer_id = db.Column(
+      db.Integer,
+      nullable=False
+      db.ForeignKey('manufacturers.id', ondelete='CASCADE')
     )
 
 
