@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -19,8 +20,11 @@ class Schedule(db.Model):
       db.String(30),
       nullable=False
     )
-
-    # manufacturer_id
+    manufacturer_id = db.Column(
+      db.Integer,
+      nullable=False
+      db.ForeignKey('manufacturers.id', ondelete='CASCADE')
+    )
 
     # add backref='schedule' and lazy='dynamic'?
     feedings = db.relationship('Feeding', backref='schedule', lazy='dynamic')
@@ -159,6 +163,15 @@ class Device(db.Model):
       db.Integer,
       nullable=True
     )
+
+    # What projects is a device associated with
+    projects = db.relationship(
+      "Device",
+      secondary="projectdevices",
+      primaryjoin=(ProjectDevice.device_id = id),
+      secondaryjoin=(ProjectDevice.project_id = "projects.id")
+      backref=db.backref('projects', lazy='dynamic'),
+      lazy='dynamic')
 
 class ProjectDevice(db.Model):
     """Connection of a device <-> project """
