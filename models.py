@@ -23,7 +23,7 @@ class Schedule(db.Model):
     # manufacturer_id
 
     # add backref='schedule' and lazy='dynamic'?
-    feedings = db.relationship('Feeding', backref='schedule')
+    feedings = db.relationship('Feeding', backref='schedule', lazy='dynamic')
 
 class Feeding(db.Model):
     """Represents one feeding event on a schedule"""
@@ -130,6 +130,34 @@ class Project(db.Model):
     ended_at = db.Column(
       db.DateTime,
       nullable=True
+    )
+
+class Device(db.Model):
+    """Represents a single device, which contains information about who and
+    where a device is registered to, as well as its core identification"""
+
+    __tablename__ = 'devices'
+
+    id = db.Column(
+      db.Integer,
+      primary_key=True
+    )
+    name = db.Column(
+      db.String(80),
+      nullable=False
+    )
+    address = db.Column(
+      db.String(80),
+      nullable=False
+    )
+    registered_at = db.Column(
+      db.DateTime,
+      nullable=False
+      default=datetime.utcnow(),
+    )
+    registered_by = db.Column(
+      db.Integer,
+      nullable=False
     )
 
 def connect_db(app):
