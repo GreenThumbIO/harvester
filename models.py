@@ -90,10 +90,9 @@ class Product(db.Model):
     )
 
 class Manufacturer(db.Model):
-    """Represents a single product with name, macro_nutrients and fk to
-    manufacturer"""
+    """Represents a single manufacturer of a product with name and id"""
 
-    __tablename__ = 'products'
+    __tablename__ = 'manufacturers'
 
     id = db.Column(
       db.Integer,
@@ -102,6 +101,35 @@ class Manufacturer(db.Model):
     name = db.Column(
       db.String(80),
       nullable=False
+    )
+
+class Project(db.Model):
+    """Represents a single project, which contains a name start timestamp,
+    ending timestamp and feeding schedule assigned to the project"""
+
+    __tablename__ = 'projects'
+
+    id = db.Column(
+      db.Integer,
+      primary_key=True
+    )
+    schedule_id = db.Column(
+      db.Integer,
+      nullable=False
+      db.ForeignKey('schedules.id', ondelete='CASCADE')
+    )
+    name = db.Column(
+      db.String(80),
+      nullable=False
+    )
+    started_at = db.Column(
+      db.DateTime,
+      nullable=False
+      default=datetime.utcnow(),
+    )
+    ended_at = db.Column(
+      db.DateTime,
+      nullable=True
     )
 
 def connect_db(app):
