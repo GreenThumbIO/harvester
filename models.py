@@ -89,6 +89,20 @@ class Product(db.Model):
       db.ForeignKey('manufacturers.id', ondelete='CASCADE')
     )
 
+class Manufacturer(db.Model):
+    """Represents a single product with name, macro_nutrients and fk to
+    manufacturer"""
+
+    __tablename__ = 'products'
+
+    id = db.Column(
+      db.Integer,
+      primary_key=True
+    )
+    name = db.Column(
+      db.String(80),
+      nullable=False
+    )
 
 def connect_db(app):
     """Connect this database to provided Flask app.
