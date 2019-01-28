@@ -1,5 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 db = SQLAlchemy()
 
@@ -136,6 +139,11 @@ class Project(db.Model):
       nullable=True
     )
 
+association_table = db.Table('projectdevices', Base.metadata,
+    db.Column('project_id', db.Integer, db.ForeignKey('projects.id')),
+    db.Column('device_id', db.Integer, db.ForeignKey('devices.id'))
+)
+
 class Device(db.Model):
     """Represents a single device, which contains information about who and
     where a device is registered to, as well as its core identification"""
@@ -163,14 +171,10 @@ class Device(db.Model):
       db.Integer,
       nullable=True
     )
-    projects = relationship("Project",
+    projects = db.relationship("Project",
             secondary=association_table,
             backref="devices")
 
-association_table = Table('projectdevices', Base.metadata,
-    Column('project_id', Integer, ForeignKey('projects.id')),
-    Column('device_id', Integer, ForeignKey('devices.id'))
-)
 
 def connect_db(app):
     """Connect this database to provided Flask app.
