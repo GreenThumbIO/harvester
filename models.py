@@ -22,8 +22,8 @@ class Schedule(db.Model):
     )
     manufacturer_id = db.Column(
       db.Integer,
+      db.ForeignKey('manufacturers.id', ondelete='CASCADE'),
       nullable=False
-      db.ForeignKey('manufacturers.id', ondelete='CASCADE')
     )
 
     # add backref='schedule' and lazy='dynamic'?
@@ -40,8 +40,8 @@ class Feeding(db.Model):
     )
     schedule_id = db.Column(
       db.Integer,
+      db.ForeignKey('schedules.id', ondelete='CASCADE'),
       nullable=False
-      db.ForeignKey('schedules.id', ondelete='CASCADE')
     )
     order = db.Column(
       db.Integer,
@@ -60,13 +60,13 @@ class Dosage(db.Model):
     )
     feeding_id = db.Column(
       db.Integer,
+      db.ForeignKey('feedings.id', ondelete='CASCADE'),
       nullable=False
-      db.ForeignKey('feedings.id', ondelete='CASCADE')
     )
     product_id = db.Column(
       db.Integer,
+      db.ForeignKey('products.id', ondelete='CASCADE'),
       nullable=False
-      db.ForeignKey('products.id', ondelete='CASCADE')
     )
 
 class Product(db.Model):
@@ -89,8 +89,8 @@ class Product(db.Model):
     )
     manufacturer_id = db.Column(
       db.Integer,
+      db.ForeignKey('manufacturers.id', ondelete='CASCADE'),
       nullable=False
-      db.ForeignKey('manufacturers.id', ondelete='CASCADE')
     )
 
 class Manufacturer(db.Model):
@@ -119,8 +119,8 @@ class Project(db.Model):
     )
     schedule_id = db.Column(
       db.Integer,
+      db.ForeignKey('schedules.id', ondelete='CASCADE'),
       nullable=False
-      db.ForeignKey('schedules.id', ondelete='CASCADE')
     )
     name = db.Column(
       db.String(80),
@@ -128,7 +128,7 @@ class Project(db.Model):
     )
     started_at = db.Column(
       db.DateTime,
-      nullable=False
+      nullable=False,
       default=datetime.utcnow(),
     )
     ended_at = db.Column(
@@ -156,7 +156,7 @@ class Device(db.Model):
     )
     registered_at = db.Column(
       db.DateTime,
-      nullable=False
+      nullable=False,
       default=datetime.utcnow(),
     )
     registered_by = db.Column(
@@ -168,8 +168,8 @@ class Device(db.Model):
     projects = db.relationship(
       "Device",
       secondary="projectdevices",
-      primaryjoin=(ProjectDevice.device_id = id),
-      secondaryjoin=(ProjectDevice.project_id = "projects.id")
+      primaryjoin=(ProjectDevice.device_id == id),
+      secondaryjoin=(ProjectDevice.project_id == "projects.id"),
       backref=db.backref('projects', lazy='dynamic'),
       lazy='dynamic')
 
@@ -180,12 +180,12 @@ class ProjectDevice(db.Model):
 
     project_id = db.Column(
       db.Integer,
-      db.ForeignKey('projects.id', ondelete='CASCADE')
+      db.ForeignKey('projects.id', ondelete='CASCADE'),
       primary_key=True,
     )
     device_id = db.Column(
       db.Integer,
-      db.ForeignKey('devices.id', ondelete='CASCADE')
+      db.ForeignKey('devices.id', ondelete='CASCADE'),
       primary_key=True,
     )
 
