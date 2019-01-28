@@ -5,8 +5,6 @@ services:
     env_file: .env
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
-    ports:
-      - "5432:3001"
 
   redis:
     image: redis
