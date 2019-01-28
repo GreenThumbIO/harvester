@@ -163,31 +163,14 @@ class Device(db.Model):
       db.Integer,
       nullable=True
     )
+    projects = relationship("Project",
+            secondary=association_table,
+            backref="devices")
 
-    # What projects is a device associated with
-    projects = db.relationship(
-      "Device",
-      secondary="projectdevices",
-      primaryjoin=(ProjectDevice.device_id == id),
-      secondaryjoin=(ProjectDevice.project_id == "projects.id"),
-      backref=db.backref('projects', lazy='dynamic'),
-      lazy='dynamic')
-
-class ProjectDevice(db.Model):
-    """Connection of a device <-> project """
-
-    __tablename__ = 'projectdevices'
-
-    project_id = db.Column(
-      db.Integer,
-      db.ForeignKey('projects.id', ondelete='CASCADE'),
-      primary_key=True,
-    )
-    device_id = db.Column(
-      db.Integer,
-      db.ForeignKey('devices.id', ondelete='CASCADE'),
-      primary_key=True,
-    )
+association_table = Table('projectdevices', Base.metadata,
+    Column('project_id', Integer, ForeignKey('projects.id')),
+    Column('device_id', Integer, ForeignKey('devices.id'))
+)
 
 def connect_db(app):
     """Connect this database to provided Flask app.
