@@ -13,5 +13,7 @@ RUN apt-get install -y postgresql-client
 
 COPY requirements.txt /harvester/requirements.txt
 
+EXPOSE 5000
+
 # Install Python dependencies
 RUN pip3 install -r requirements.txt
