@@ -11,23 +11,11 @@ class Schedule(db.Model):
 
     __tablename__ = 'schedules'
 
-    id = db.Column(
-      db.Integer,
-      primary_key=True
-    )
-    name = db.Column(
-      db.String(80),
-      nullable=False
-    )
-    frequency = db.Column(
-      db.String(30),
-      nullable=False
-    )
-    manufacturer_id = db.Column(
-      db.Integer,
-      db.ForeignKey('manufacturers.id', ondelete='CASCADE'),
-      nullable=False
-    )
+    id = db.Column( db.Integer, primary_key=True)
+    name = db.Column( db.String(80), nullable=False)
+    frequency = db.Column( db.String(30), nullable=False)
+    manufacturer_id = db.Column( db.Integer, db.ForeignKey('manufacturers.id', 
+        ondelete='CASCADE'), nullable=False)
 
     # add backref='schedule' and lazy='dynamic'?
     feedings = db.relationship('Feeding', backref='schedule', lazy='dynamic')
@@ -37,19 +25,10 @@ class Feeding(db.Model):
 
     __tablename__ = 'feedings'
 
-    id = db.Column(
-      db.Integer,
-      primary_key=True
-    )
-    schedule_id = db.Column(
-      db.Integer,
-      db.ForeignKey('schedules.id', ondelete='CASCADE'),
-      nullable=False
-    )
-    order = db.Column(
-      db.Integer,
-      nullable=False
-    )
+    id = db.Column( db.Integer, primary_key=True)
+    schedule_id = db.Column( db.Integer, db.ForeignKey('schedules.id', 
+        ondelete='CASCADE'), nullable=False)
+    order = db.Column( db.Integer, nullable=False)
 
 class Dosage(db.Model):
     """Represents one dosage of a product with amount, product id, and feeding
@@ -57,20 +36,11 @@ class Dosage(db.Model):
 
     __tablename__ = 'dosages'
 
-    id = db.Column(
-      db.Integer,
-      primary_key=True
-    )
-    feeding_id = db.Column(
-      db.Integer,
-      db.ForeignKey('feedings.id', ondelete='CASCADE'),
-      nullable=False
-    )
-    product_id = db.Column(
-      db.Integer,
-      db.ForeignKey('products.id', ondelete='CASCADE'),
-      nullable=False
-    )
+    id = db.Column( db.Integer, primary_key=True)
+    feeding_id = db.Column( db.Integer, db.ForeignKey('feedings.id', 
+        ondelete='CASCADE'), nullable=False)
+    product_id = db.Column( db.Integer, db.ForeignKey('products.id',
+        ondelete='CASCADE'), nullable=False)
 
 class Product(db.Model):
     """Represents a single product with name, macro_nutrients and fk to
@@ -78,37 +48,19 @@ class Product(db.Model):
 
     __tablename__ = 'products'
 
-    id = db.Column(
-      db.Integer,
-      primary_key=True
-    )
-    name = db.Column(
-      db.String(80),
-      nullable=False
-    )
-    macro_nutrients = db.Column(
-      db.String(80),
-      nullable=True
-    )
-    manufacturer_id = db.Column(
-      db.Integer,
-      db.ForeignKey('manufacturers.id', ondelete='CASCADE'),
-      nullable=False
-    )
+    id = db.Column( db.Integer, primary_key=True)
+    name = db.Column( db.String(80), nullable=False)
+    macro_nutrients = db.Column( db.String(80), nullable=True)
+    manufacturer_id = db.Column( db.Integer, db.ForeignKey('manufacturers.id', 
+        ondelete='CASCADE'), nullable=False)
 
 class Manufacturer(db.Model):
     """Represents a single manufacturer of a product with name and id"""
 
     __tablename__ = 'manufacturers'
 
-    id = db.Column(
-      db.Integer,
-      primary_key=True
-    )
-    name = db.Column(
-      db.String(80),
-      nullable=False
-    )
+    id = db.Column( db.Integer, primary_key=True)
+    name = db.Column( db.String(80), nullable=False)
 
 class Project(db.Model):
     """Represents a single project, which contains a name start timestamp,
@@ -116,28 +68,13 @@ class Project(db.Model):
 
     __tablename__ = 'projects'
 
-    id = db.Column(
-      db.Integer,
-      primary_key=True
-    )
-    schedule_id = db.Column(
-      db.Integer,
-      db.ForeignKey('schedules.id', ondelete='CASCADE'),
-      nullable=False
-    )
-    name = db.Column(
-      db.String(80),
-      nullable=False
-    )
-    started_at = db.Column(
-      db.DateTime,
-      nullable=False,
-      default=datetime.utcnow(),
-    )
-    ended_at = db.Column(
-      db.DateTime,
-      nullable=True
-    )
+    id = db.Column( db.Integer, primary_key=True)
+    schedule_id = db.Column( db.Integer, db.ForeignKey('schedules.id',
+        ondelete='CASCADE'), nullable=False)
+    name = db.Column( db.String(80), nullable=False)
+    started_at = db.Column( db.DateTime, nullable=False, 
+            default=datetime.utcnow())
+    ended_at = db.Column( db.DateTime, nullable=True)
 
 association_table = db.Table('projectdevices', Base.metadata,
     db.Column('project_id', db.Integer, db.ForeignKey('projects.id')),
@@ -150,27 +87,12 @@ class Device(db.Model):
 
     __tablename__ = 'devices'
 
-    id = db.Column(
-      db.Integer,
-      primary_key=True
-    )
-    name = db.Column(
-      db.String(80),
-      nullable=False
-    )
-    address = db.Column(
-      db.String(80),
-      nullable=False
-    )
-    registered_at = db.Column(
-      db.DateTime,
-      nullable=False,
-      default=datetime.utcnow(),
-    )
-    registered_by = db.Column(
-      db.Integer,
-      nullable=True
-    )
+    id = db.Column( db.Integer, primary_key=True)
+    name = db.Column( db.String(80), nullable=False)
+    address = db.Column( db.String(80), nullable=False)
+    registered_at = db.Column( db.DateTime, nullable=False, 
+            default=datetime.utcnow(),)
+    registered_by = db.Column( db.Integer, nullable=True)
     projects = db.relationship("Project",
             secondary=association_table,
             backref="devices")
