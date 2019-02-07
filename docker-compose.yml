@@ -11,7 +11,7 @@ services:
 
   web:
     build: .
-    command: python3 app.py
+    command: python3 app/__init__.py
     volumes:
       - .:/harvester
     ports:
