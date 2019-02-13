@@ -1,20 +1,28 @@
 version: '3'
+
 services:
   db:
     image: postgres
+    env_file: .env
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    environment:
+      PGDATA: /var/lib/postgresql/data/data
+      POSTGRES_USER: "postgres"
+      POSTGRES_DB: "harvest_test"
 
   redis:
     image: redis
 
   web:
     build: .
-    command: python3 app.py
+    command: python3 manage.py runserver
     volumes:
       - .:/harvester
     ports:
-      - "8080:8080"
+      - "5000:5000"
     depends_on:
       - redis
       - db
